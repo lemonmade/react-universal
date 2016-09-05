@@ -13,8 +13,8 @@ import createUniversalReactAppMiddleware from './middleware/universal-react-app'
 
 import type {ConfigType} from '../types';
 
-export default function createApp(appDetails, config: ConfigType) {
-  const {webpackClientConfig, serverPort} = config;
+export default function createServer(appDetails, config: ConfigType) {
+  const {serverPort, buildDir, publicPath} = config;
   const {schema} = appDetails;
   const universalReactAppMiddleware = createUniversalReactAppMiddleware(appDetails, config);
 
@@ -51,8 +51,8 @@ export default function createApp(appDetails, config: ConfigType) {
   app.use('/graphql', graphql({schema, pretty: true, graphiql: true}));
 
   app.use(
-    webpackClientConfig.output.publicPath,
-    express.static(webpackClientConfig.output.path)
+    publicPath,
+    express.static(path.join(buildDir, 'client'), {maxAge: '365d'})
   );
 
   app.get('*', universalReactAppMiddleware);

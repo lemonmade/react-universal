@@ -1,7 +1,7 @@
 {
   "name": "blueprint-output",
   "eslintConfig": {
-    "presets": [
+    "extends": [
       "plugin:shopify/react"
     ]
   },

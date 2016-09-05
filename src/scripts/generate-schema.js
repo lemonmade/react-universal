@@ -1,5 +1,7 @@
 // @flow
 
+require('babel-core/register');
+
 import fs from 'fs-extra';
 import path from 'path';
 import {graphql} from 'graphql';

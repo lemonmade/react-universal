@@ -25,7 +25,7 @@ function merge(...args: Array<?Object>): Object {
   return Object.assign({}, ...removeEmpty(args));
 }
 
-export default function webpackConfigFactory({target, mode}, {projectRoot, appDir, dataDir, clientDevServerPort}) {
+export default function webpackConfigFactory({target, mode}, {projectRoot, appDir, dataDir, clientDevServerPort, buildDir}) {
   if (['client', 'server'].find((valid) => target === valid) == null) {
     throw new Error('You must provide a "target" (client|server) to the webpackConfigFactory.');
   }
@@ -75,7 +75,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${clientDevServerPort}/__webpack_hmr`),
-          path.resolve(projectRoot, `./${target}/index.js`),
+          path.resolve(projectRoot, `./${target}.js`),
         ]),
       }
     ),
@@ -154,7 +154,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
-          exclude: [/node_modules/, path.resolve(projectRoot, './build')],
+          exclude: [/node_modules/, buildDir],
           query: merge(
             {
               env: {

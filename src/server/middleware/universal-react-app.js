@@ -11,7 +11,7 @@ import createRenderer from './renderer';
 
 export default function createUniversalReactAppMiddleware(appDetails, {serverPort}) {
   const render = createRenderer(appDetails);
-  const {routes, createStore} = appDetails;
+  const {routes, store} = appDetails;
 
   return function universalReactAppMiddleware(request, response, next) {
     if (process.env.DISABLE_SSR) {
@@ -45,8 +45,6 @@ export default function createUniversalReactAppMiddleware(appDetails, {serverPor
       }
 
       function renderPreparedData({data, props}) {
-        const store = createStore();
-
         const html = render({
           rootElement: (
             <Provider store={store}>

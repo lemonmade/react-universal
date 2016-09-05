@@ -1,15 +1,29 @@
 import webpack from 'webpack';
+
+import createWebpackConfig from '../webpack';
 import config from '../config';
 
-const clientCompiler = webpack(config.webpackClientConfig);
-const serverCompiler = webpack(config.webpackServerConfig);
+export default async function build({mode = 'production'} = {}) {
+  const clientConfig = createWebpackConfig({target: 'client', mode}, config);
+  const serverConfig = createWebpackConfig({target: 'server', mode}, config);
 
-const noop = (err, stats) => {
-  console.log(stats.hasErrors(), stats.toString({
-    chunks: false, // Makes the build much quieter
-    colors: true,
-  }));
-};
+  const clientCompiler = webpack(clientConfig);
+  const serverCompiler = webpack(serverConfig);
 
-clientCompiler.run(noop);
-serverCompiler.run(noop);
+  await runCompiler(clientCompiler);
+  await runCompiler(serverCompiler);
+}
+
+async function runCompiler(compiler) {
+  await new Promise((resolve, reject) => {
+    compiler.run((err, stats) => {
+      if (err) {
+        console.log(stats.toString());
+        reject(err);
+        return;
+      }
+
+      resolve();
+    });
+  });
+}

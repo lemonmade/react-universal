@@ -1,11 +1,8 @@
 import type React from 'react';
 import {renderToString} from 'react-dom/server';
-import path from 'path';
 import objectValues from 'core-js/library/fn/object/values';
 
 import createTemplate from './template';
-
-import type {ConfigType} from '../../types';
 
 type RenderOptionsType = {
   rootElement?: React.Element,
