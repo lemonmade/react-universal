@@ -5,6 +5,12 @@
       "plugin:shopify/react"
     ]
   },
+  "scripts": {
+    "test": "blueprint test",
+    "build": "blueprint build",
+    "start": "blueprint start",
+    "dev": "blueprint dev"
+  },
   "dependencies": {
     "blueprint": "^0.0.1",
     "graphql": "^0.7.0",

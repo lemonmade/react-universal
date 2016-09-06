@@ -25,7 +25,7 @@ function merge(...args: Array<?Object>): Object {
   return Object.assign({}, ...removeEmpty(args));
 }
 
-export default function webpackConfigFactory({target, mode}, {projectRoot, appDir, dataDir, clientDevServerPort, buildDir}) {
+export default function webpackConfigFactory({target, mode}, {projectRoot, appDir, dataDir, clientDevServerPort, buildDir, stylesDir}) {
   if (['client', 'server'].find((valid) => target === valid) == null) {
     throw new Error('You must provide a "target" (client|server) to the webpackConfigFactory.');
   }
@@ -250,7 +250,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
     ],
     sassLoader: {
       includePaths: [
-        appDir,
+        stylesDir,
       ],
     },
   };

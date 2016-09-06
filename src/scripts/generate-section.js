@@ -44,7 +44,7 @@ export default function generateSection(
   `));
 
   if (subsection == null) {
-    fs.writeFileSync(path.join(dir, 'Routes.js'), correctWhitespace(`
+    fs.writeFileSync(path.join(dir, 'index.js'), correctWhitespace(`
       // @flow
 
       import React from 'react';
