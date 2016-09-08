@@ -51,6 +51,8 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
   const ifDevServer = ifElse(isDev && isServer);
   const ifProdClient = ifElse(isProd && isClient);
 
+  const finalBuildDir = path.join(buildDir, target);
+
   return {
     target: ifServer('node', 'web'),
     // We have to set this to be able to use these items when executing a
@@ -77,12 +79,12 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${clientDevServerPort}/__webpack_hmr`),
-          path.resolve(projectRoot, `./build/${target}.js`),
+          path.resolve(buildDir, `./${target}.js`),
         ]),
       }
     ),
     output: {
-      path: path.resolve(projectRoot, `./build/${target}`),
+      path: finalBuildDir,
       filename: ifProdClient('[name]-[hash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: ifDev(
@@ -118,7 +120,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
       // we need to inject into our HTML.
       new AssetsPlugin({
         filename: 'assets.json',
-        path: path.resolve(projectRoot, `./build/${target}`),
+        path: finalBuildDir,
       }),
 
       ifDev(new webpack.NoErrorsPlugin()),
@@ -156,7 +158,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
-          exclude: [/node_modules/, buildDir],
+          exclude: [/node_modules/],
           query: merge(
             {
               env: {

@@ -116,7 +116,7 @@ class HotEnv {
       Object
         .keys(require.cache)
         .filter((modulePath) => modulePath.indexOf(config.buildDir) >= 0)
-        .forEach((modulePath) => delete require.cache[modulePath]);
+        .forEach((modulePath) => console.log(modulePath) || delete require.cache[modulePath]);
 
       this.server = new HotServer(this.app, config);
     });

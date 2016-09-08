@@ -32,23 +32,25 @@ class ListenerManager {
           this.connectionMap[connectionKey].destroy();
         });
 
-      if (this.listener) {
-        this.listener.close(() => resolve());
-      } else {
+      if (this.listener == null) {
         resolve();
+      } else {
+        this.listener.close(() => resolve());
       }
     });
   }
 }
 
 class HotServer {
-  constructor(app, config) {
+  constructor(compiler, config) {
+    const createServer = require(path.join(config.buildDir, 'server', 'main.js')).default;
+    const app = createServer(config);
     const listener = start(app, config);
     this.listenerManager = new ListenerManager(listener);
   }
 
   async dispose() {
-    if (!this.listenerManager) { return; }
+    if (this.listenerManager == null) { return; }
     await this.listenerManager.dispose();
   }
 }
@@ -73,6 +75,7 @@ class HotClient {
   }
 
   async dispose() {
+    console.log('DISPOSING CLIENT');
     this.webpackDevMiddleware.close();
     await this.listenerManager.dispose();
   }
@@ -83,12 +86,12 @@ class HotEnv {
   restart = this.restart.bind(this);
   compileHotServer = this.compileHotServer.bind(this);
 
-  constructor(app, config) {
-    this.app = app;
+  constructor(config) {
     this.config = config;
   }
 
   async start() {
+    console.log('STARTING');
     const {config} = this;
 
     this.serverCompiler = webpack(webpackConfigFactory({target: 'server', mode: 'development'}, config));
@@ -96,14 +99,14 @@ class HotEnv {
 
     this.client = new HotClient(this.clientCompiler, config);
 
-    this.clientCompiler.plugin('done', (stats) => {
+    this.clientCompiler.plugin('done', async (stats) => {
       if (stats.hasErrors()) {
         console.log('CLIENT COMPILER HAD ERRORS');
         console.log(stats.toString());
       }
 
       console.log('FINISHED CLIENT COMPILER');
-      this.compileHotServer();
+      await this.compileHotServer();
     });
 
     this.serverCompiler.plugin('done', (stats) => {
@@ -117,10 +120,10 @@ class HotEnv {
       // Make sure our newly built server bundles aren't in the module cache.
       Object
         .keys(require.cache)
-        .filter((modulePath) => modulePath.indexOf(config.buildDir) >= 0)
+        .filter((modulePath) => modulePath.indexOf(this.serverCompiler.options.output.path) >= 0)
         .forEach((modulePath) => delete require.cache[modulePath]);
 
-      this.server = new HotServer(this.app, config);
+      this.server = new HotServer(this.serverCompiler, config);
     });
 
     const watcher = chokidar.watch([path.resolve(config.appDir, 'server.js')]);
@@ -135,6 +138,8 @@ class HotEnv {
   }
 
   async compileHotServer() {
+    console.log('COMPILING HOT SERVER');
+
     if (this.server) {
       await this.server.dispose();
     }
@@ -148,20 +153,12 @@ class HotEnv {
       this.server && this.server.dispose(),
     ]);
 
-    clearWebpackConfigsCache();
     this.start();
   }
 }
 
 function noop() {}
 
-function clearWebpackConfigsCache() {
-  Object
-    .keys(require.cache)
-    .filter((modulePath) => modulePath.indexOf('webpack') >= 0)
-    .forEach((modulePath) => delete require.cache[modulePath]);
-}
-
-export default function createHotEnv(app, config) {
-  return new HotEnv(app, config);
+export default function createHotEnv(config) {
+  return new HotEnv(config);
 }

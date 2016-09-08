@@ -11,7 +11,7 @@ export const builder = {};
 
 export async function handler() {
   const config = await loadConfig();
-  const createServer = require(path.join(config.dataDir, 'server', 'main.js'));
+  const createServer = require(path.join(config.buildDir, 'server', 'main.js')).default;
   const server = createServer(config);
 
   start(server, config);
