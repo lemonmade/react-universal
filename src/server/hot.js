@@ -5,8 +5,8 @@ import chokidar from 'chokidar';
 import createWebpackMiddleware from 'webpack-dev-middleware';
 import createWebpackHotMiddleware from 'webpack-hot-middleware';
 
+import start from './start';
 import webpackConfigFactory from '../webpack';
-import config from '../config';
 
 class ListenerManager {
   connectionKey = 0;
@@ -40,10 +40,9 @@ class ListenerManager {
 }
 
 class HotServer {
-  constructor() {
-    const serverPath = path.resolve(config.buildDir, 'server/main.js');
-    const server = require(serverPath).default;
-    this.listenerManager = new ListenerManager(server.listener);
+  constructor(app, config) {
+    const listener = start(app, config);
+    this.listenerManager = new ListenerManager(listener);
   }
 
   async dispose() {
@@ -53,7 +52,7 @@ class HotServer {
 }
 
 class HotClient {
-  constructor(compiler) {
+  constructor(compiler, config) {
     const app = express();
     this.webpackDevMiddleware = createWebpackMiddleware(compiler, {
       quiet: true,
@@ -82,11 +81,18 @@ class HotEnv {
   restart = this.restart.bind(this);
   compileHotServer = this.compileHotServer.bind(this);
 
+  constructor(app, config) {
+    this.app = app;
+    this.config = config;
+  }
+
   async start() {
+    const {config} = this;
+
     this.serverCompiler = webpack(webpackConfigFactory({target: 'server', mode: 'development'}, config));
     this.clientCompiler = webpack(webpackConfigFactory({target: 'client', mode: 'development'}, config));
 
-    this.client = new HotClient(this.clientCompiler);
+    this.client = new HotClient(this.clientCompiler, config);
 
     this.clientCompiler.plugin('done', (stats) => {
       if (stats.hasErrors()) {
@@ -112,7 +118,7 @@ class HotEnv {
         .filter((modulePath) => modulePath.indexOf(config.buildDir) >= 0)
         .forEach((modulePath) => delete require.cache[modulePath]);
 
-      this.server = new HotServer(this.serverCompiler);
+      this.server = new HotServer(this.app, config);
     });
 
     const watcher = chokidar.watch([path.resolve(config.appDir, 'server.js')]);
@@ -154,6 +160,6 @@ function clearWebpackConfigsCache() {
     .forEach((modulePath) => delete require.cache[modulePath]);
 }
 
-export default function createHotEnv() {
-  return new HotEnv();
+export default function createHotEnv(app, config) {
+  return new HotEnv(app, config);
 }

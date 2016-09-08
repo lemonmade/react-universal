@@ -6,7 +6,7 @@ import camelcase from 'camelcase';
 import pascalcase from 'uppercamelcase';
 
 import {correctWhitespace} from './utilities';
-import type {ConfigType} from '../types';
+import type {ConfigType} from '../../types';
 
 type SectionCreationType = {
   section: string,

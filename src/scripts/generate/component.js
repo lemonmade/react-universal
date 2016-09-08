@@ -5,7 +5,7 @@ import path from 'path';
 import pascalcase from 'uppercamelcase';
 
 import {correctWhitespace} from './utilities';
-import type {ConfigType} from '../types';
+import type {ConfigType} from '../../types';
 
 type ComponentCreationType = {
   component: string,

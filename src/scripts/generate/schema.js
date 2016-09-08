@@ -1,13 +1,13 @@
 // @flow
 
-require('babel-core/register');
+import 'babel-core/register';
 
 import fs from 'fs-extra';
 import path from 'path';
 import {graphql} from 'graphql';
 import {introspectionQuery, printSchema} from 'graphql/utilities';
 
-import type {ConfigType} from '../types';
+import type {ConfigType} from '../../types';
 
 export default async function generateSchema({dataDir}: ConfigType) {
   const Schema = require(path.join(dataDir, 'schema')).default;

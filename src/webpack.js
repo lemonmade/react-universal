@@ -34,6 +34,8 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
     throw new Error('You must provide a "mode" (development|production) to the webpackConfigFactory.');
   }
 
+  console.log(`GENERATING ${target} CONFIG IN ${mode}`);
+
   const relayPluginPath = path.join(dataDir, 'babel-relay-plugin');
 
   const isDev = (mode === 'development');
@@ -75,7 +77,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${clientDevServerPort}/__webpack_hmr`),
-          path.resolve(projectRoot, `./${target}.js`),
+          path.resolve(projectRoot, `./build/${target}.js`),
         ]),
       }
     ),

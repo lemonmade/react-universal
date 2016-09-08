@@ -1,8 +1,5 @@
 // @flow
 
-import server from './server';
-import config from './config';
+import createServer from './server';
 
-export function createServer(appDetails) {
-  return server(appDetails, config);
-}
+export {createServer};
