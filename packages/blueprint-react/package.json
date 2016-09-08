@@ -1,0 +1,7 @@
+{
+  "name": "@lemonmade/blueprint-react",
+  "main": "lib/index.js",
+  "bin": {
+    "react-dev": "bin/blueprint-react"
+  }
+}
