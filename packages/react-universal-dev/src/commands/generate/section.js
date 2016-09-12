@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import camelcase from 'camelcase';
 import pascalcase from 'uppercamelcase';
+import loadConfig from '@lemonmade/react-universal-config';
 
 import {correctWhitespace} from './utilities';
 
@@ -16,16 +17,18 @@ type ConfigType = {
   sectionDir: string,
 }
 
-export default function generateSection(
-  {section, subsection}: SectionCreationType,
-  {sectionDir}: ConfigType
-) {
-  section = pascalcase(section); // eslint-disable-line no-param-reassign
-  subsection = subsection && pascalcase(subsection); // eslint-disable-line no-param-reassign
+export const command = 'section <name>';
+export const describe = 'Generate a new section';
+export const builder = {};
+
+export async function handler({name}) {
+  const {sectionDir} = await loadConfig();
+  const [sectionName, subsectionName] = name.split('/');
+  const section = pascalcase(sectionName); // eslint-disable-line no-param-reassign
+  const subsection = subsectionName && pascalcase(subsectionName); // eslint-disable-line no-param-reassign
 
   const dir = path.join(sectionDir, section);
   const file = path.join(dir, `${subsection || section}.js`);
-  const name = subsection || section;
   const camelSection = camelcase(section);
 
   fs.mkdirpSync(dir);
@@ -37,7 +40,7 @@ export default function generateSection(
 
     type Props = {};
 
-    export default function ${name}(props: Props) {
+    export default function ${subsection || section}(props: Props) {
       return (
         <div>
           Welcome to ${subsection == null ? section : `${section}/${subsection}`}!

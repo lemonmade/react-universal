@@ -17,7 +17,6 @@ process.on('unhandledRejection', (err) => {
 
 yargs
   .usage('$0 <cmd> [args]')
-  .command(build)
-  .command(dev)
+  .commandDir('commands')
   .help('h')
   .argv;

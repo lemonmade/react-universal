@@ -6,10 +6,10 @@
     ]
   },
   "scripts": {
-    "test": "blueprint test",
-    "build": "blueprint build",
-    "start": "blueprint start",
-    "dev": "blueprint dev"
+    "test": "react-dev test",
+    "build": "react-dev build",
+    "start": "react start",
+    "dev": "react-dev dev"
   },
   "dependencies": {
     "blueprint": "^0.0.1",

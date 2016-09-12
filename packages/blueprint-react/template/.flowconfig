@@ -10,4 +10,4 @@ esproposal.class_instance_fields=enable
 unsafe.enable_getters_and_setters=true
 module.system.node.resolve_dirname=node_modules
 module.system.node.resolve_dirname=app
-module.name_mapper='^\(.*\)\.scss$' -> '<PROJECT_ROOT>/node_modules/blueprint/interfaces/css.js.flow'
+module.name_mapper='^\(.*\)\.scss$' -> '<PROJECT_ROOT>/node_modules/@lemonmade/react-universal-dev/interfaces/css.js.flow'

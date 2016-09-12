@@ -1,5 +1,6 @@
 // @flow
 
+import path from 'path';
 import IsomorphicRouter from 'isomorphic-relay-router';
 import Relay from 'react-relay';
 import React from 'react';
@@ -9,8 +10,9 @@ import match from 'react-router/lib/match';
 
 import createRenderer from './renderer';
 
-export default function createUniversalReactAppMiddleware(appDetails, {serverPort}) {
-  const render = createRenderer(appDetails);
+export default function createUniversalReactAppMiddleware(appDetails, {serverPort, buildDir}) {
+  const clientBundleAssets = require(path.join(buildDir, 'client', 'assets.json'));
+  const render = createRenderer({...appDetails, clientBundleAssets});
   const {routes, store} = appDetails;
 
   return function universalReactAppMiddleware(request, response, next) {

@@ -25,7 +25,7 @@ function merge(...args: Array<?Object>): Object {
   return Object.assign({}, ...removeEmpty(args));
 }
 
-export default function webpackConfigFactory({target, mode}, {projectRoot, appDir, dataDir, clientDevServerPort, buildDir, stylesDir}) {
+export default function webpackConfigFactory({target, mode}, {projectRoot, appDir, clientDevServerPort, buildDir, stylesDir, scriptsDir}) {
   if (['client', 'server'].find((valid) => target === valid) == null) {
     throw new Error('You must provide a "target" (client|server) to the webpackConfigFactory.');
   }
@@ -36,7 +36,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
 
   console.log(`GENERATING ${target} CONFIG IN ${mode}`);
 
-  const relayPluginPath = path.join(dataDir, 'babel-relay-plugin');
+  const relayPluginPath = path.join(scriptsDir, 'babel-relay-plugin');
 
   const isDev = (mode === 'development');
   const isProd = (mode === 'production');
@@ -79,7 +79,7 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${clientDevServerPort}/__webpack_hmr`),
-          path.resolve(buildDir, `./${target}.js`),
+          path.resolve(appDir, `${target}.js`),
         ]),
       }
     ),

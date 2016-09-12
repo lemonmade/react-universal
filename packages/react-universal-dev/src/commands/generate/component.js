@@ -3,25 +3,20 @@
 import fs from 'fs-extra';
 import path from 'path';
 import pascalcase from 'uppercamelcase';
+import loadConfig from '@lemonmade/react-universal-config';
 
 import {correctWhitespace} from './utilities';
 
-type ComponentCreationType = {
-  component: string,
-  section?: ?string,
-};
+export const command = 'component <name>';
+export const describe = 'Generate a new component';
+export const builder = {};
 
-type ConfigType = {
-  componentDir: string,
-  sectionDir: string,
-};
+export async function handler({name}) {
+  const {componentDir, sectionDir} = await loadConfig();
 
-export default function generateComponent(
-  {component, section}: ComponentCreationType,
-  {componentDir, sectionDir}: ConfigType
-) {
-  component = pascalcase(component); // eslint-disable-line no-param-reassign
-  section = section && pascalcase(section); // eslint-disable-line no-param-reassign
+  const [sectionName, componentName = sectionName] = name.split('/');
+  const component = pascalcase(componentName);
+  const section = sectionName === componentName ? null : pascalcase(sectionName);
 
   const dir = section == null
     ? path.join(componentDir, component)
