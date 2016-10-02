@@ -1,4 +1,4 @@
-import createClientRenderer from '@lemonmade/react-universal/lib/client';
+import createClientRenderer from '@lemonmade/react-universal/client';
 
 import initialRoutes from 'sections';
 import createStore from 'store';

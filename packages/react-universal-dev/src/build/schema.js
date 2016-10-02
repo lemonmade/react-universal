@@ -20,7 +20,7 @@ export default async function generateSchema({dataDir, buildDir}: ConfigType) {
     // eslint-disable-next-line no-console
     console.error(
       'ERROR introspecting schema: ',
-      JSON.stringify(result.errors, null, 2)
+      result.errors[0]
     );
     return;
   }

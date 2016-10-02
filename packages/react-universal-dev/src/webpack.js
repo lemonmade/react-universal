@@ -65,9 +65,9 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
     externals: removeEmpty([
       ifServer(nodeExternals({
         // Add any dependencies here that need to be processed by Webpack
-        binaryDirs: [
-          'blueprint',
-        ],
+        whitelist: [
+          /^relay\/.+/,
+        ]
       })),
     ]),
     devtool: ifElse(isServer || isDev)(
@@ -174,27 +174,16 @@ export default function webpackConfigFactory({target, mode}, {projectRoot, appDi
             },
             ifServer({
               presets: [
-                {plugins: [relayPluginPath]},
-                'stage-2',
-                'react',
-              ],
-              plugins: [
-                'transform-class-properties',
-                'transform-export-extensions',
+                'shopify/node',
+                'shopify/react',
               ],
             }),
             ifClient({
               // For our clients code we will need to transpile our JS into
               // ES5 code for wider browser/device compatability.
               presets: [
-                {plugins: [relayPluginPath]},
-                ['es2015', {modules: false}],
-                'stage-2',
-                'react',
-              ],
-              plugins: [
-                'transform-class-properties',
-                'transform-export-extensions',
+                ['shopify/web', {modules: false}],
+                'shopify/react',
               ],
             })
           ),

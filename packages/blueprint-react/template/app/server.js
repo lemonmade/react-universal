@@ -1,4 +1,4 @@
-import createServer from '@lemonmade/react-universal/lib/server';
+import createServer from '@lemonmade/react-universal/server';
 
 import schema from 'data/schema';
 import routes from 'sections';

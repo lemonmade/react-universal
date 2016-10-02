@@ -12,7 +12,7 @@ import graphql from 'express-graphql';
 import start from './start';
 import createUniversalReactAppMiddleware from './middleware/universal-react-app';
 
-export {start};
+export {start, createUniversalReactAppMiddleware};
 
 export default function createServerFactory(appDetails, configurator = () => {}) {
   return function createServer(config) {

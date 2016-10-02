@@ -3,7 +3,17 @@
   "eslintConfig": {
     "extends": [
       "plugin:shopify/react"
-    ]
+    ],
+    "options": {
+      "import/resolver": {
+        "node": {
+          "moduleDirectory": [
+            "node_modules",
+            "app"
+          ]
+        }
+      }
+    }
   },
   "scripts": {
     "test": "react-dev test",
