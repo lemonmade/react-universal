@@ -16,7 +16,10 @@ function javascriptImports(javascript) {
 }
 
 function metaTags(meta) {
-  return Object.keys(meta).map((metaKey) => `<meta name="${metaKey}" content="${meta[metaKey]}" />`);
+  return Object
+    .keys(meta)
+    .map((metaKey) => `<meta name="${metaKey}" content="${meta[metaKey]}" />`)
+    .join('\n');
 }
 
 // :: Assets -> Content -> String
@@ -29,7 +32,7 @@ export type TemplateOptionsType = {
   title?: ?string,
   meta?: Object,
   initialState?: Object,
-  reactRootElement: string | React.Element,
+  reactRootElement: string,
 };
 
 export default function createTemplate({css = [], javascript = []}: TemplateAssetType = {}) {

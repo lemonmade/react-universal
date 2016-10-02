@@ -6,13 +6,10 @@ import fs from 'fs-extra';
 import path from 'path';
 import {graphql} from 'graphql';
 import {introspectionQuery, printSchema} from 'graphql/utilities';
+import type {ConfigType} from '@lemonmade/react-universal-config';
 
-type ConfigType = {
-  dataDir: string,
-  buildDir: string,
-};
-
-export default async function generateSchema({dataDir, buildDir}: ConfigType) {
+export default async function generateSchema({dataDir, buildDir}: ConfigType): Promise<void> {
+  // $FlowIgnore: need the dynamic require in this case.
   const Schema = require(path.join(dataDir, 'schema')).default;
 
   const result = await graphql(Schema, introspectionQuery);

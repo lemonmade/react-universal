@@ -6,13 +6,17 @@ import webpack from 'webpack';
 import chokidar from 'chokidar';
 import createWebpackMiddleware from 'webpack-dev-middleware';
 import createWebpackHotMiddleware from 'webpack-hot-middleware';
-import {start} from '@lemonmade/react-universal/lib/server';
+import {start} from '@lemonmade/react-universal/server';
+import type {ConfigType} from '@lemonmade/react-universal-config';
+
+type WebpackCompiler = Object;
 
 import webpackConfigFactory from '../../webpack';
 
 class ListenerManager {
   connectionKey = 0;
   connectionMap = {};
+  listener: net$Server;
 
   constructor(listener) {
     this.listener = listener;
@@ -42,22 +46,25 @@ class ListenerManager {
 }
 
 class HotServer {
+  listenerManager: ListenerManager;
+
   constructor(compiler, config) {
-    const createServer = require(path.join(config.buildDir, 'server', 'main.js')).default;
-    const app = createServer(config);
-    const listener = start(app, config);
+    const listener = start(config);
     this.listenerManager = new ListenerManager(listener);
   }
 
   async dispose() {
-    if (this.listenerManager == null) { return; }
     await this.listenerManager.dispose();
   }
 }
 
 class HotClient {
+  webpackDevMiddleware: Object;
+  listenerManager: ListenerManager;
+
   constructor(compiler, config) {
     const app = express();
+
     this.webpackDevMiddleware = createWebpackMiddleware(compiler, {
       quiet: true,
       noInfo: true,
@@ -82,11 +89,17 @@ class HotClient {
 }
 
 class HotEnv {
-  start = this.start.bind(this);
-  restart = this.restart.bind(this);
-  compileHotServer = this.compileHotServer.bind(this);
+  config: ConfigType;
+  client: HotClient;
+  server: HotServer;
+  serverCompiler: WebpackCompiler;
+  clientCompiler: WebpackCompiler;
 
-  constructor(config) {
+  start: () => Promise<void> = this.start.bind(this);
+  restart: () => Promise<void> = this.restart.bind(this);
+  compileHotServer: () => Promise<void> = this.compileHotServer.bind(this);
+
+  constructor(config: ConfigType) {
     this.config = config;
   }
 
@@ -159,6 +172,8 @@ class HotEnv {
 
 function noop() {}
 
-export default function createHotEnv(config) {
-  return new HotEnv(config);
+export default async function runHot(config: ConfigType): Promise<HotEnv> {
+  const env = new HotEnv(config);
+  await env.start();
+  return env;
 }

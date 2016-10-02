@@ -1,3 +1,4 @@
+// @flow
 /* eslint-disable no-console, no-process-env */
 
 import path from 'path';
@@ -13,11 +14,15 @@ import postcssCalc from 'postcss-calc';
 import postcssFlexbugsFixes from 'postcss-flexbugs-fixes';
 import postcssSelectorMatches from 'postcss-selector-matches';
 
+import type {ConfigType} from '@lemonmade/react-universal-config';
+import type {BuildModeType, BuildTargetType} from './types';
+
 function removeEmpty<T>(x: Array<?T>): Array<T> {
   return x.filter(Boolean);
 }
 
-function ifElse(condition: boolean): <T>(then: ?T, or: ?T) => ?T {
+function ifElse(condition: boolean): <T>(then?: T, or?: T) => T | void {
+  // $FlowFixMe: this feels like it should work, but doesn't
   return (then, or) => (condition ? then : or);
 }
 
@@ -25,7 +30,10 @@ function merge(...args: Array<?Object>): Object {
   return Object.assign({}, ...removeEmpty(args));
 }
 
-export default function webpackConfigFactory({target, mode}, {projectRoot, appDir, clientDevServerPort, buildDir, stylesDir, scriptsDir}) {
+export default function webpackConfigFactory(
+  {target = 'client', mode = 'development'}: {target?: BuildTargetType, mode?: BuildModeType},
+  {projectRoot, appDir, clientDevServerPort, buildDir, stylesDir, scriptsDir}: ConfigType
+): Object {
   if (['client', 'server'].find((valid) => target === valid) == null) {
     throw new Error('You must provide a "target" (client|server) to the webpackConfigFactory.');
   }

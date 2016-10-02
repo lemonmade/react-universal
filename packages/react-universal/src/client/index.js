@@ -1,3 +1,4 @@
+// @flow
 /* eslint-env browser */
 
 import React from 'react';
@@ -11,7 +12,7 @@ import Router from 'react-router/lib/Router';
 import browserHistory from 'react-router/lib/browserHistory';
 import match from 'react-router/lib/match';
 
-export default function createClientRenderer({store}) {
+export default function createClientRenderer({store}: {store: Object}) {
   const environment = new Relay.Environment();
   environment.injectNetworkLayer(new Relay.DefaultNetworkLayer('/graphql'));
   const data = window.APP_STATE;
@@ -21,7 +22,7 @@ export default function createClientRenderer({store}) {
   // Get the DOM Element that will host our React application.
   const container = document.querySelector('#app');
 
-  return function renderApp(routes) {
+  return function renderApp(routes: React$Element<*>) {
     // As we are using dynamic react-router routes we have to use the following
     // asynchronous routing mechanism supported by the `match` function.
     // @see https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md

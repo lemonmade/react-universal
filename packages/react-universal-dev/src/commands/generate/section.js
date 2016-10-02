@@ -8,6 +8,10 @@ import loadConfig from '@lemonmade/react-universal-config';
 
 import {correctWhitespace} from './utilities';
 
+type GenerateSectionOptionsType = {
+  name: string,
+};
+
 type SectionCreationType = {
   section: string,
   subsection?: ?string,
@@ -21,7 +25,7 @@ export const command = 'section <name>';
 export const describe = 'Generate a new section';
 export const builder = {};
 
-export async function handler({name}) {
+export async function handler({name}: GenerateSectionOptionsType) {
   const {sectionDir} = await loadConfig();
   const [sectionName, subsectionName] = name.split('/');
   const section = pascalcase(sectionName); // eslint-disable-line no-param-reassign

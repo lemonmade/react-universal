@@ -11,7 +11,11 @@ export const command = 'component <name>';
 export const describe = 'Generate a new component';
 export const builder = {};
 
-export async function handler({name}) {
+type GenerateComponentOptionsType = {
+  name: string,
+};
+
+export async function handler({name}: GenerateComponentOptionsType) {
   const {componentDir, sectionDir} = await loadConfig();
 
   const [sectionName, componentName = sectionName] = name.split('/');

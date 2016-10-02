@@ -8,24 +8,22 @@ import {Provider} from 'react-redux';
 import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 import match from 'react-router/lib/match';
 
+import type {$Request, $Response, Middleware} from 'express';
+import type {ConfigType} from '@lemonmade/react-universal-config';
+import type {AppDetailsType} from '..';
+
 import createRenderer from './renderer';
 
-export default function createUniversalReactAppMiddleware(appDetails, {serverPort, buildDir}) {
+export default function createUniversalReactAppMiddleware(
+  appDetails: AppDetailsType,
+  {serverPort, buildDir}: ConfigType
+): Middleware {
+  // $FlowIgnore: need the dynamic require
   const clientBundleAssets = require(path.join(buildDir, 'client', 'assets.json'));
   const render = createRenderer({...appDetails, clientBundleAssets});
   const {routes, store} = appDetails;
 
-  return function universalReactAppMiddleware(request, response, next) {
-    if (process.env.DISABLE_SSR) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('==> 🐌  Handling react route without SSR');  // eslint-disable-line no-console
-      }
-
-      const html = render();
-      response.status(200).send(html);
-      return;
-    }
-
+  return function universalReactAppMiddleware(request: $Request, response: $Response, next: Middleware) {
     const history = createMemoryHistory(request.originalUrl);
     const networkLayer = new Relay.DefaultNetworkLayer(`http://localhost:${serverPort}/graphql`);
 

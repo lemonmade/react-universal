@@ -3,11 +3,20 @@
 import fs from 'fs-extra';
 import path from 'path';
 import webpack from 'webpack';
+import type {ConfigType} from '@lemonmade/react-universal-config';
 
 import generateSchema from './schema';
 import createWebpackConfig from '../webpack';
+import type {BuildModeType} from '../types';
 
-export default async function handler(config, {mode = 'production'}) {
+type BuildOptionsType = {
+  mode?: BuildModeType,
+};
+
+export default async function handler(
+  config: ConfigType,
+  {mode = 'production'}: BuildOptionsType = {}
+) {
   fs.emptyDirSync(config.buildDir);
 
   await generateSchema(config);

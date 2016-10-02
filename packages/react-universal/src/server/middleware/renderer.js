@@ -1,3 +1,5 @@
+// @flow
+
 import type React from 'react';
 import {renderToString} from 'react-dom/server';
 import objectValues from 'core-js/library/fn/object/values';
@@ -5,12 +7,17 @@ import objectValues from 'core-js/library/fn/object/values';
 import createTemplate from './template';
 
 type RenderOptionsType = {
-  rootElement?: React.Element,
+  rootElement?: React$Element<*>,
   initialState?: Object,
   meta?: Object,
 };
 
-export default function createRenderer({clientBundleAssets}) {
+type AssetType = {
+  js?: string,
+  css?: string,
+};
+
+export default function createRenderer({clientBundleAssets}: {clientBundleAssets: AssetType[]}) {
   // This takes the assets.json file that was output by webpack for our client
   // bundle and converts it into an object that contains all the paths to our
   // javascript and css files.  Doing this is required as for production

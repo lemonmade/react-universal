@@ -2,7 +2,21 @@
 
 import path from 'path';
 
-export default function loadConfig() {
+export type ConfigType = {
+  projectRoot: string,
+  appDir: string,
+  dataDir: string,
+  buildDir: string,
+  componentDir: string,
+  sectionDir: string,
+  stylesDir: string,
+  scriptsDir: string,
+  publicPath: string,
+  serverPort: number,
+  clientDevServerPort: number,
+}
+
+export default function loadConfig(): ConfigType {
   const projectRoot = process.cwd();
   const appRoot = path.resolve(projectRoot, 'app');
 

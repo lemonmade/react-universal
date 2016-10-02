@@ -8,22 +8,27 @@ import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import graphql from 'express-graphql';
+import type {ConfigType} from '@lemonmade/react-universal-config';
 
 import start from './start';
 import createUniversalReactAppMiddleware from './middleware/universal-react-app';
 
 export {start, createUniversalReactAppMiddleware};
 
-export default function createServerFactory(appDetails, configurator = () => {}) {
-  return function createServer(config) {
+export type AppDetailsType = {
+  routes: Object,
+  schema: Object,
+  store: Object,
+};
+
+export default function createServerFactory(appDetails: AppDetailsType) {
+  return function createServer(config: ConfigType) {
     const {publicPath, buildDir} = config;
     const {schema} = appDetails;
     const universalReactAppMiddleware = createUniversalReactAppMiddleware(appDetails, config);
 
     // Create our express based server.
     const app = express();
-
-    configurator(app);
 
     // Don't expose any software information to hackers.
     app.disable('x-powered-by');

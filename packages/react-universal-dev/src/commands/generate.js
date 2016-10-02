@@ -1,3 +1,5 @@
+// @flow
+
 import yargs from 'yargs';
 
 export const command = 'generate <command>';
