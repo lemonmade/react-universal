@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "main": "lib/index.js",
   "scripts": {
-    "build": "../../node_modules/.bin/babel ./src --out-dir ./lib/",
+    "build": "../../node_modules/.bin/babel ./src --out-dir ./lib/ && cp src/index.js lib/index.js.flow",
     "prepublish": "npm run build"
   }
 }
