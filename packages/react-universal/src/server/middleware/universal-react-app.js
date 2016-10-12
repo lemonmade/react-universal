@@ -15,13 +15,12 @@ import type {AppDetailsType} from '..';
 import createRenderer from './renderer';
 
 export default function createUniversalReactAppMiddleware(
-  appDetails: AppDetailsType,
-  {serverPort, buildDir}: ConfigType
+  {routes, store}: AppDetailsType,
+  {serverPort, buildDir}: ConfigType,
 ): Middleware {
   // $FlowIgnore: need the dynamic require
   const clientBundleAssets = require(path.join(buildDir, 'client', 'assets.json'));
-  const render = createRenderer({...appDetails, clientBundleAssets});
-  const {routes, store} = appDetails;
+  const render = createRenderer({clientBundleAssets});
 
   return function universalReactAppMiddleware(request: $Request, response: $Response, next: Middleware) {
     const history = createMemoryHistory(request.originalUrl);

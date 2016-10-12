@@ -17,7 +17,7 @@ export default async function generateSchema({dataDir, buildDir}: ConfigType): P
     // eslint-disable-next-line no-console
     console.error(
       'ERROR introspecting schema: ',
-      result.errors[0]
+      result.errors[0],
     );
     return;
   }
@@ -26,11 +26,11 @@ export default async function generateSchema({dataDir, buildDir}: ConfigType): P
 
   fs.writeFileSync(
     path.join(buildDir, 'schema.json'),
-    JSON.stringify(result, null, 2)
+    JSON.stringify(result, null, 2),
   );
 
   fs.writeFileSync(
     path.join(buildDir, 'schema.graphql'),
-    printSchema(Schema)
+    printSchema(Schema),
   );
 }

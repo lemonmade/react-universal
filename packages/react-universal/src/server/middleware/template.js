@@ -1,6 +1,5 @@
 // @flow
 
-import type React from 'react';
 import serialize from 'serialize-javascript';
 
 function cssImports(css) {

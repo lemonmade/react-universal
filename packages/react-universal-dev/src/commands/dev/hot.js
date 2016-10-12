@@ -9,9 +9,9 @@ import createWebpackHotMiddleware from 'webpack-hot-middleware';
 import {start} from '@lemonmade/react-universal/server';
 import type {ConfigType} from '@lemonmade/react-universal-config';
 
-type WebpackCompiler = Object;
-
 import webpackConfigFactory from '../../webpack';
+
+type WebpackCompilerType = Object;
 
 class ListenerManager {
   connectionKey = 0;
@@ -92,8 +92,8 @@ class HotEnv {
   config: ConfigType;
   client: HotClient;
   server: HotServer;
-  serverCompiler: WebpackCompiler;
-  clientCompiler: WebpackCompiler;
+  serverCompiler: WebpackCompilerType;
+  clientCompiler: WebpackCompilerType;
 
   start: () => Promise<void> = this.start.bind(this);
   restart: () => Promise<void> = this.restart.bind(this);
@@ -170,6 +170,7 @@ class HotEnv {
   }
 }
 
+// eslint-disable-next-line no-empty-function
 function noop() {}
 
 export default async function runHot(config: ConfigType): Promise<HotEnv> {

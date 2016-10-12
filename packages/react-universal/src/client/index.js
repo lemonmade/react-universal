@@ -28,7 +28,7 @@ export default function createClientRenderer({store}: {store: Object}) {
     // @see https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md
     match({history: browserHistory, routes}, (error, redirectLocation, renderProps) => {
       if (error) {
-        console.log('==> 😭  React Router match failed.'); // eslint-disable-line no-console
+        console.log('==> 😭  React Router match failed.');
       }
 
       IsomorphicRouter
@@ -40,9 +40,12 @@ export default function createClientRenderer({store}: {store: Object}) {
                 <Router {...props} />
               </Provider>
             </AppContainer>,
-            container
+            container,
           );
+        })
+        .catch(() => {
+          console.log('==> 😭  Rendering failed.');
         });
     });
-  }
+  };
 }

@@ -21,7 +21,7 @@ function removeEmpty<T>(x: Array<?T>): Array<T> {
   return x.filter(Boolean);
 }
 
-function ifElse(condition: boolean): <T>(then?: T, or?: T) => T | void {
+function ifElse(condition: boolean): <T>(then: ?T, or: ?T) => T | void {
   // $FlowFixMe: this feels like it should work, but doesn't
   return (then, or) => (condition ? then : or);
 }
@@ -32,7 +32,7 @@ function merge(...args: Array<?Object>): Object {
 
 export default function webpackConfigFactory(
   {target = 'client', mode = 'development'}: {target?: BuildTargetType, mode?: BuildModeType},
-  {projectRoot, appDir, clientDevServerPort, buildDir, stylesDir, scriptsDir}: ConfigType
+  {appDir, clientDevServerPort, buildDir, stylesDir, scriptsDir}: ConfigType,
 ): Object {
   if (['client', 'server'].find((valid) => target === valid) == null) {
     throw new Error('You must provide a "target" (client|server) to the webpackConfigFactory.');
@@ -75,12 +75,12 @@ export default function webpackConfigFactory(
         // Add any dependencies here that need to be processed by Webpack
         whitelist: [
           /^relay\/.+/,
-        ]
+        ],
       })),
     ]),
     devtool: ifElse(isServer || isDev)(
       'source-map',
-      'hidden-source-map'
+      'hidden-source-map',
     ),
     entry: merge(
       {
@@ -89,7 +89,7 @@ export default function webpackConfigFactory(
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${clientDevServerPort}/__webpack_hmr`),
           path.resolve(appDir, `${target}.js`),
         ]),
-      }
+      },
     ),
     output: {
       path: finalBuildDir,
@@ -99,7 +99,7 @@ export default function webpackConfigFactory(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
         `http://localhost:${clientDevServerPort}/assets/`,
-        '/assets/'
+        '/assets/',
       ),
       libraryTarget: ifServer('commonjs2', 'var'),
     },
@@ -139,7 +139,7 @@ export default function webpackConfigFactory(
         new webpack.LoaderOptionsPlugin({
           minimize: true,
           debug: false,
-        })
+        }),
       ),
 
       ifProdClient(
@@ -148,13 +148,13 @@ export default function webpackConfigFactory(
             screw_ie8: true, // eslint-disable-line camelcase
             warnings: false,
           },
-        })
+        }),
       ),
 
       ifProd(new webpack.optimize.DedupePlugin()),
 
       ifProdClient(
-        new ExtractTextPlugin({filename: '[name]-[chunkhash].css', allChunks: true})
+        new ExtractTextPlugin({filename: '[name]-[chunkhash].css', allChunks: true}),
       ),
     ]),
     module: {
@@ -193,7 +193,7 @@ export default function webpackConfigFactory(
                 ['shopify/web', {modules: false}],
                 'shopify/react',
               ],
-            })
+            }),
           ),
         },
 
@@ -237,7 +237,7 @@ export default function webpackConfigFactory(
                 query: {sourceMap: true},
               },
             ],
-          })
+          }),
         ),
       ],
     },

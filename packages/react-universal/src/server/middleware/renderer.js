@@ -1,6 +1,5 @@
 // @flow
 
-import type React from 'react';
 import {renderToString} from 'react-dom/server';
 import objectValues from 'core-js/library/fn/object/values';
 

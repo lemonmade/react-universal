@@ -12,15 +12,6 @@ type GenerateSectionOptionsType = {
   name: string,
 };
 
-type SectionCreationType = {
-  section: string,
-  subsection?: ?string,
-};
-
-type ConfigType = {
-  sectionDir: string,
-}
-
 export const command = 'section <name>';
 export const describe = 'Generate a new section';
 export const builder = {};

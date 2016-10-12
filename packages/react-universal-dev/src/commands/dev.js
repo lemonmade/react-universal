@@ -1,6 +1,5 @@
 // @flow
 
-import path from 'path';
 import loadConfig from '@lemonmade/react-universal-config';
 
 import runHot from './dev/hot';

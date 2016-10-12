@@ -1,7 +1,6 @@
 // @flow
 
 import fs from 'fs-extra';
-import path from 'path';
 import webpack from 'webpack';
 import type {ConfigType} from '@lemonmade/react-universal-config';
 
@@ -15,7 +14,7 @@ type BuildOptionsType = {
 
 export default async function handler(
   config: ConfigType,
-  {mode = 'production'}: BuildOptionsType = {}
+  {mode = 'production'}: BuildOptionsType = {},
 ) {
   fs.emptyDirSync(config.buildDir);
 

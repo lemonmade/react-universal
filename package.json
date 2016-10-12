@@ -1,23 +1,23 @@
 {
-  "name": "blueprint",
+  "name": "react-universal",
+  "private": "true",
   "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
-  "bin": {
-    "blueprint": "bin/blueprint"
-  },
   "author": "Chris Sauve <chrismsauve@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "flow": "flow",
+    "lint": "eslint . --max-warnings 0",
+    "check": "npm run flow && npm run lint"
+  },
   "eslintConfig": {
     "extends": [
       "plugin:shopify/esnext",
       "plugin:shopify/node",
+      "plugin:shopify/react",
       "plugin:shopify/flow"
-    ],
-    "rules": {
-      "no-sync": "off",
-      "no-process-env": "off"
-    }
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
@@ -27,7 +27,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-2": "^6.13.0",
     "babel-preset-shopify": "^13.0.0",
-    "eslint": "^3.4.0",
+    "eslint": "^3.7.0",
     "eslint-plugin-shopify": "^14.0.0",
     "flow-bin": "^0.31.1"
   }

@@ -1,28 +1,21 @@
-import {
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString,
-} from 'graphql';
+// @flow
+
+import {buildSchema} from 'graphql';
 
 const data = {
   name: 'Chris Sauve',
 };
 
-const UserType = new GraphQLObjectType({
-  name: 'User',
-  fields: {
-    name: {type: GraphQLString},
-  },
-});
+export const scema = buildSchema(`
+  type User {
+    name: String!
+  }
 
-export default new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'Query',
-    fields: {
-      user: {
-        type: UserType,
-        resolve: () => data,
-      },
-    },
-  }),
-});
+  type Query {
+    user: User
+  }
+`);
+
+export const rootValue = {
+  user() { return data; }
+};
