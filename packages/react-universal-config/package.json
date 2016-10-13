@@ -1,7 +1,8 @@
 {
   "name": "@lemonmade/react-universal-config",
-  "version": "0.3.0",
+  "version": "0.7.0",
   "main": "lib/index.js",
+  "license": "MIT",
   "scripts": {
     "build": "../../node_modules/.bin/babel ./src --out-dir ./lib/ && cp src/index.js lib/index.js.flow",
     "prepublish": "npm run build"

@@ -1,6 +1,8 @@
 [ignore]
-<PROJECT_ROOT>/packages/react-universal-dev/node_modules/fbjs
 <PROJECT_ROOT>/packages/blueprint-react
+<PROJECT_ROOT>/packages/react-universal-dev/node_modules/fbjs
+<PROJECT_ROOT>/packages/react-universal-dev/node_modules/webpack-visualizer-plugin/node_modules/fbjs
+<PROJECT_ROOT>/packages/react-universal/node_modules/react-side-effect/node_modules/fbjs
 
 [libs]
 flow/definitions

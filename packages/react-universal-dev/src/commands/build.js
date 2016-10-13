@@ -3,6 +3,7 @@
 import loadConfig from '@lemonmade/react-universal-config';
 
 import build from '../build';
+import type {BuildModeType} from '../types';
 
 export const command = 'build [mode]';
 export const describe = 'Build the server and client bundles';
@@ -14,7 +15,7 @@ export const builder = {
 };
 
 type BuildOptionsType = {
-  mode?: string,
+  mode?: BuildModeType,
 };
 
 export async function handler(options: BuildOptionsType) {

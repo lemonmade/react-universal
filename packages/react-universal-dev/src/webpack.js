@@ -6,6 +6,7 @@ import webpack from 'webpack';
 import AssetsPlugin from 'assets-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import VisualizerPlugin from 'webpack-visualizer-plugin';
 
 import autoprefixer from 'autoprefixer';
 import postcssWillChange from 'postcss-will-change';
@@ -61,7 +62,7 @@ export default function webpackConfigFactory(
 
   const finalBuildDir = path.join(buildDir, target);
 
-  return {
+  const config = {
     target: ifServer('node', 'web'),
     // We have to set this to be able to use these items when executing a
     // server bundle.  Otherwise strangeness happens, like __dirname resolving
@@ -90,6 +91,18 @@ export default function webpackConfigFactory(
           path.resolve(appDir, `${target}.js`),
         ]),
       },
+      ifClient({
+        vendor: [
+          'react',
+          'react-dom',
+          'react-relay',
+          'isomorphic-relay',
+          'isomorphic-relay-router',
+          'graphql',
+          'redux',
+          'react-redux',
+        ],
+      }),
     ),
     output: {
       path: finalBuildDir,
@@ -131,9 +144,18 @@ export default function webpackConfigFactory(
         path: finalBuildDir,
       }),
 
+      new VisualizerPlugin(),
+
       ifDev(new webpack.NoErrorsPlugin()),
       ifDevClient(new webpack.HotModuleReplacementPlugin()),
       ifDevServer(new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1})),
+
+      ifClient(
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'vendor',
+          minChunks: Infinity,
+        }),
+      ),
 
       ifProdClient(
         new webpack.LoaderOptionsPlugin({
@@ -142,16 +164,26 @@ export default function webpackConfigFactory(
         }),
       ),
 
+      ifProd(new webpack.optimize.DedupePlugin()),
+
       ifProdClient(
         new webpack.optimize.UglifyJsPlugin({
           compress: {
-            screw_ie8: true, // eslint-disable-line camelcase
+            // eslint-disable-next-line camelcase
+            screw_ie8: true,
             warnings: false,
+          },
+          mangle: {
+            // eslint-disable-next-line camelcase
+            screw_ie8: true,
+          },
+          output: {
+            comments: false,
+            // eslint-disable-next-line camelcase
+            screw_ie8: true,
           },
         }),
       ),
-
-      ifProd(new webpack.optimize.DedupePlugin()),
 
       ifProdClient(
         new ExtractTextPlugin({filename: '[name]-[chunkhash].css', allChunks: true}),
@@ -166,7 +198,7 @@ export default function webpackConfigFactory(
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
-          exclude: [/node_modules/],
+          include: appDir,
           query: merge(
             {
               env: {
@@ -174,21 +206,17 @@ export default function webpackConfigFactory(
                   presets: [
                     {plugins: [relayPluginPath]},
                   ],
-                  plugins: [
-                    'react-hot-loader/babel',
-                  ],
+                  plugins: ['react-hot-loader/babel'],
                 },
               },
             },
             ifServer({
               presets: [
-                'shopify/node',
+                ['shopify/node', {modules: false}],
                 'shopify/react',
               ],
             }),
             ifClient({
-              // For our clients code we will need to transpile our JS into
-              // ES5 code for wider browser/device compatability.
               presets: [
                 ['shopify/web', {modules: false}],
                 'shopify/react',
@@ -206,14 +234,59 @@ export default function webpackConfigFactory(
           {test: /\.scss$/},
           ifServer({
             loaders: [
-              'css-loader/locals?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-              'sass-loader',
+              {
+                loader: 'css-loader/locals',
+                query: {
+                  modules: true,
+                  importLoaders: 1,
+                  localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
+                },
+              },
+              {
+                loader: 'sass-loader',
+                query: {
+                  includePaths: [
+                    stylesDir,
+                  ],
+                },
+              },
             ],
           }),
           ifProdClient({
             loader: ExtractTextPlugin.extract({
-              notExtractLoader: 'style-loader',
-              loader: 'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]!sass-loader!postcss-loader',
+              fallbackLoader: 'style-loader',
+              loader: [
+                {
+                  loader: 'css-loader',
+                  query: {
+                    sourceMap: true,
+                    modules: true,
+                    importLoaders: 1,
+                    localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
+                  },
+                },
+                {
+                  loader: 'sass-loader',
+                  query: {
+                    includePaths: [
+                      stylesDir,
+                    ],
+                  },
+                },
+                {
+                  loader: 'postcss-loader',
+                  options: {
+                    plugins: [
+                      postcssDiscardComments(),
+                      postcssCalc(),
+                      postcssFlexbugsFixes,
+                      postcssSelectorMatches,
+                      postcssWillChange,
+                      autoprefixer(),
+                    ],
+                  },
+                },
+              ],
             }),
           }),
           ifDevClient({
@@ -230,29 +303,33 @@ export default function webpackConfigFactory(
               },
               {
                 loader: 'sass-loader',
-                query: {sourceMap: true},
+                query: {
+                  sourceMap: true,
+                  includePaths: [
+                    stylesDir,
+                  ],
+                },
               },
               {
                 loader: 'postcss-loader',
-                query: {sourceMap: true},
+                options: {
+                  sourceMap: true,
+                  plugins: [
+                    postcssDiscardComments(),
+                    postcssCalc(),
+                    postcssFlexbugsFixes,
+                    postcssSelectorMatches,
+                    postcssWillChange,
+                    autoprefixer(),
+                  ],
+                },
               },
             ],
           }),
         ),
       ],
     },
-    postcss: [
-      postcssDiscardComments(),
-      postcssCalc(),
-      postcssFlexbugsFixes,
-      postcssSelectorMatches,
-      postcssWillChange,
-      autoprefixer(),
-    ],
-    sassLoader: {
-      includePaths: [
-        stylesDir,
-      ],
-    },
   };
+
+  return config;
 }

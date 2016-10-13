@@ -1,12 +1,6 @@
 {
   presets: [
-    "shopify/node",
-    "react",
-    {plugins: ["transform-es2015-destructuring"]},
-    "stage-2"
-  ],
-  plugins: [
-    "syntax-flow",
-    "transform-flow-strip-types"
+    ["shopify/node", {version: "5.7.0"}],
+    "shopify/react",
   ]
 }

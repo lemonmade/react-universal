@@ -14,7 +14,7 @@ export type ConfigType = {
   publicPath: string,
   serverPort: number,
   clientDevServerPort: number,
-}
+};
 
 export default function loadConfig(): ConfigType {
   const projectRoot = process.cwd();

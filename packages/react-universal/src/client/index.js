@@ -43,8 +43,9 @@ export default function createClientRenderer({store}: {store: Object}) {
             container,
           );
         })
-        .catch(() => {
+        .catch((routerError) => {
           console.log('==> 😭  Rendering failed.');
+          console.log(routerError);
         });
     });
   };
