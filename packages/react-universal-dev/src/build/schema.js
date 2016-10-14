@@ -10,7 +10,8 @@ import type {ConfigType} from '@lemonmade/react-universal-config';
 
 export default async function generateSchema({dataDir, buildDir}: ConfigType): Promise<void> {
   // $FlowIgnore: need the dynamic require in this case.
-  const Schema = require(path.join(dataDir, 'schema')).default;
+  const schemaPackage = require(path.join(dataDir, 'schema'));
+  const Schema = schemaPackage.schema || schemaPackage.default;
 
   const result = await graphql(Schema, introspectionQuery);
   if (result.errors) {
