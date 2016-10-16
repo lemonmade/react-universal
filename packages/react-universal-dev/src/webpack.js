@@ -198,7 +198,7 @@ export default function webpackConfigFactory(
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
-          include: appDir,
+          exclude: /node_modules/,
           query: merge(
             {
               env: {

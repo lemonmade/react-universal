@@ -6,7 +6,7 @@ const data = {
   name: 'Chris Sauve',
 };
 
-export const scema = buildSchema(`
+export const schema = buildSchema(`
   type User {
     name: String!
   }
@@ -17,5 +17,5 @@ export const scema = buildSchema(`
 `);
 
 export const rootValue = {
-  user() { return data; }
+  user() { return data; },
 };

@@ -1,6 +1,6 @@
 {
   "name": "@lemonmade/react-universal",
-  "version": "0.15.0",
+  "version": "0.18.0",
   "main": "lib/index.js",
   "bin": {
     "react": "bin/react"
