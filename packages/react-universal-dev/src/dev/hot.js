@@ -9,7 +9,7 @@ import createWebpackHotMiddleware from 'webpack-hot-middleware';
 import {start} from '@lemonmade/react-universal/server';
 import type {ConfigType} from '@lemonmade/react-universal-config';
 
-import webpackConfigFactory from '../../webpack';
+import webpackConfigFactory from '../webpack';
 
 type WebpackCompilerType = Object;
 
@@ -49,8 +49,10 @@ class HotServer {
   listenerManager: ListenerManager;
 
   constructor(compiler, config) {
-    const listener = start(config);
-    this.listenerManager = new ListenerManager(listener);
+    (async () => {
+      const listener = await start(config);
+      this.listenerManager = new ListenerManager(listener);
+    })();
   }
 
   async dispose() {
