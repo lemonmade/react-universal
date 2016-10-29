@@ -48,9 +48,9 @@ class ListenerManager {
 class HotServer {
   listenerManager: ListenerManager;
 
-  constructor(compiler, config) {
+  constructor(compiler, config, ...args) {
     (async () => {
-      const listener = await start(config);
+      const listener = await start(config, ...args);
       this.listenerManager = new ListenerManager(listener);
     })();
   }
@@ -105,7 +105,7 @@ class HotEnv {
     this.config = config;
   }
 
-  async start() {
+  async start(...args) {
     console.log('STARTING');
     const {config} = this;
 
@@ -138,7 +138,7 @@ class HotEnv {
         .filter((modulePath) => modulePath.indexOf(this.serverCompiler.options.output.path) >= 0)
         .forEach((modulePath) => delete require.cache[modulePath]);
 
-      this.server = new HotServer(this.serverCompiler, config);
+      this.server = new HotServer(this.serverCompiler, config, ...args);
     });
 
     const watcher = chokidar.watch([path.resolve(config.appDir, 'server.js')]);
@@ -175,7 +175,7 @@ class HotEnv {
 // eslint-disable-next-line no-empty-function
 function noop() {}
 
-export default async function runHot(config: ConfigType): Promise<HotEnv> {
+export default async function runDev(config: ConfigType): Promise<HotEnv> {
   const env = new HotEnv(config);
   await env.start();
   return env;
