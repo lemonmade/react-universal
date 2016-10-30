@@ -9,7 +9,7 @@ import createWebpackHotMiddleware from 'webpack-hot-middleware';
 import {start} from '@lemonmade/react-universal/server';
 import type {ConfigType} from '@lemonmade/react-universal-config';
 
-import webpackConfigFactory from '../webpack';
+import webpackConfigFactory from './webpack';
 
 type WebpackCompilerType = Object;
 
