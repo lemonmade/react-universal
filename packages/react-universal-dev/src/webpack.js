@@ -76,6 +76,7 @@ export default function webpackConfigFactory(
         // Add any dependencies here that need to be processed by Webpack
         whitelist: [
           /^relay\/.+/,
+          /@shopify\/quilt/,
         ],
       })),
     ]),
@@ -231,7 +232,10 @@ export default function webpackConfigFactory(
         },
 
         merge(
-          {test: /\.scss$/},
+          {
+            test: /\.scss$/,
+            exclude: /node_modules/,
+          },
           ifServer({
             loaders: [
               {
