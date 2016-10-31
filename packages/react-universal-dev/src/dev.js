@@ -97,15 +97,15 @@ class HotEnv {
   serverCompiler: WebpackCompilerType;
   clientCompiler: WebpackCompilerType;
 
-  start: () => Promise<void> = this.start.bind(this);
-  restart: () => Promise<void> = this.restart.bind(this);
-  compileHotServer: () => Promise<void> = this.compileHotServer.bind(this);
+  start = this.start.bind(this);
+  restart = this.restart.bind(this);
+  compileHotServer = this.compileHotServer.bind(this);
 
   constructor(config: ConfigType) {
     this.config = config;
   }
 
-  async start(...args) {
+  async start(...args: any) {
     console.log('STARTING');
     const {config} = this;
 
@@ -175,7 +175,7 @@ class HotEnv {
 // eslint-disable-next-line no-empty-function
 function noop() {}
 
-export default async function runDev(config: ConfigType, ...args): Promise<HotEnv> {
+export default async function runDev(config: ConfigType, ...args: any): Promise<HotEnv> {
   const env = new HotEnv(config);
   await env.start(...args);
   return env;

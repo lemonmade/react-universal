@@ -331,5 +331,5 @@ export default function webpackConfigFactory(
     },
   };
 
-  return webpackConfigurator(config);
+  return webpackConfigurator(config, {target, mode});
 }
