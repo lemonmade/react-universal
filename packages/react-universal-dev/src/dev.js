@@ -175,8 +175,8 @@ class HotEnv {
 // eslint-disable-next-line no-empty-function
 function noop() {}
 
-export default async function runDev(config: ConfigType): Promise<HotEnv> {
+export default async function runDev(config: ConfigType, ...args): Promise<HotEnv> {
   const env = new HotEnv(config);
-  await env.start();
+  await env.start(...args);
   return env;
 }
