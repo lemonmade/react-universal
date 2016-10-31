@@ -1,6 +1,7 @@
 // @flow
 
 import path from 'path';
+import cosmiconfig from 'cosmiconfig';
 
 export type ConfigType = {
   projectRoot: string,
@@ -14,11 +15,20 @@ export type ConfigType = {
   publicPath: string,
   serverPort: number,
   clientDevServerPort: number,
+  webpackConfigurator: (config: Object) => Object,
 };
 
-export default function loadConfig(): ConfigType {
-  const projectRoot = process.cwd();
-  const appRoot = path.resolve(projectRoot, 'app');
+export default async function loadConfig(): Promise<ConfigType> {
+  let userConfig = {};
+
+  try {
+    userConfig = (await cosmiconfig('react-universal')).config;
+  } catch (error) {
+    // Just keep default config
+  }
+
+  const projectRoot = userConfig.projectRoot || process.cwd();
+  const appRoot = userConfig.appRoot || path.resolve(projectRoot, 'app');
 
   return {
     projectRoot,
@@ -32,5 +42,7 @@ export default function loadConfig(): ConfigType {
     publicPath: '/assets/',
     serverPort: 3000,
     clientDevServerPort: 8060,
+    webpackConfigurator: (config) => config,
+    ...userConfig,
   };
 }

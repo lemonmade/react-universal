@@ -1,6 +1,6 @@
 {
   "name": "@lemonmade/react-universal-dev",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "main": "lib/index.js",
   "bin": {
     "react-dev": "bin/react-dev"
@@ -10,8 +10,8 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@lemonmade/react-universal": "0.18.x",
-    "@lemonmade/react-universal-config": "0.7.x",
+    "@lemonmade/react-universal": "0.19.x",
+    "@lemonmade/react-universal-config": "0.8.x",
     "assets-webpack-plugin": "^3.4.0",
     "autoprefixer": "^6.5.0",
     "babel-core": "^6.17.0",

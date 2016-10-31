@@ -1,6 +1,6 @@
 {
   "name": "@lemonmade/react-universal",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "main": "lib/index.js",
   "bin": {
     "react": "bin/react"
@@ -10,7 +10,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@lemonmade/react-universal-config": "0.7.x",
+    "@lemonmade/react-universal-config": "0.8.x",
     "compression": "^1.6.2",
     "core-js": "^2.4.1",
     "express": "^4.14.0",

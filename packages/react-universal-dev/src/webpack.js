@@ -33,7 +33,7 @@ function merge(...args: Array<?Object>): Object {
 
 export default function webpackConfigFactory(
   {target = 'client', mode = 'development'}: {target?: BuildTargetType, mode?: BuildModeType},
-  {appDir, clientDevServerPort, buildDir, stylesDir, scriptsDir}: ConfigType,
+  {appDir, clientDevServerPort, buildDir, stylesDir, scriptsDir, webpackConfigurator}: ConfigType,
 ): Object {
   if (['client', 'server'].find((valid) => target === valid) == null) {
     throw new Error('You must provide a "target" (client|server) to the webpackConfigFactory.');
@@ -331,5 +331,5 @@ export default function webpackConfigFactory(
     },
   };
 
-  return config;
+  return webpackConfigurator(config);
 }
